@@ -191,18 +191,15 @@ def run_zip():
 
         return jsonify({"output": out, "error": err, "exit_code": status})
 
-
 @app.route("/history", methods=["GET"])
 def history():
     with HISTORY_LOCK:
         # return a shallow copy
         return jsonify({"history": HISTORY})
 
-
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
-
 
 if __name__ == "__main__":
     init_db()
