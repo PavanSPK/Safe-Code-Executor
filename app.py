@@ -141,8 +141,6 @@ def run_batch():
     return jsonify({"results": results})
 
 
-# inside app.py - replace the run_zip route with this
-
 @app.route("/run-zip", methods=["POST"])
 def run_zip():
     """
