@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "error": "",
+      "exit_code": 0,
+      "output": "task1\n"
+    },
+    {
+      "error": "",
+      "exit_code": 0,
+      "output": "task2\n"
+    },
+    {
+      "error": "",
+      "exit_code": 0,
+      "output": "task3\n"
+    },
+    {
+      "error": "",
+      "exit_code": 0,
+      "output": "task4\n"
+    },
+    {
+      "error": "",
+      "exit_code": 0,
+      "output": "task5\n"
+    }
+  ]
+}

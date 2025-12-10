@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Safe Code Executor — Python & Node</title>
+  <style>
+    :root{
+      --bg:#f8fafc;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --text:#0f172a;
+      --accent:#2563eb;
+      --radius:12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+      --shadow:0 10px 30px rgba(15,23,42,0.06);
+      --error:#dc2626;
+      --ok:#16a34a;
+      --idle:#9ca3af;
+      --running:#2563eb;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.35;
+    }
+
+    .wrap {
+      max-width: 1360px;
+      margin: 32px auto;
+      padding: 18px;
+    }
+
+    .header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom: 14px;
+    }
+    .title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .subtitle { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+    /* main grid: left editor (bigger) + right column */
+    .card {
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 18px;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 1100px) {
+      .card { grid-template-columns: 1fr; }
+    }
+
+    /* editor column */
+    .editor-col {
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      min-height: 380px; /* reduced further */
+    }
+
+    .controls {
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .controls .left {
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .controls .right {
+      margin-left:auto;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    select.lang {
+      padding:8px 10px;
+      border-radius:8px;
+      border:1px solid #e6eef9;
+      background:white;
+      font-size:14px;
+    }
+
+    button.btn {
+      padding:9px 14px;
+      border-radius:10px;
+      border:0;
+      background: var(--accent);
+      color:white;
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+    }
+    button.ghost {
+      padding:8px 12px;
+      border-radius:10px;
+      border:1px solid #eef2ff;
+      background:white;
+      color:var(--muted);
+      cursor:pointer;
+    }
+
+    /* textarea: reduced height again */
+    textarea.code {
+      width:100%;
+      min-height:180px;
+      height:180px;
+      resize:vertical;
+      padding:14px;
+      border-radius:10px;
+      border:1px solid #e6eef9;
+      background: linear-gradient(180deg,#fff,#fbfdff);
+      font-family: var(--mono);
+      font-size:13px;
+      color: var(--text);
+      line-height:1.5;
+      box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
+    }
+    @media (max-width:1100px) {
+      textarea.code { min-height:170px; height:190px; }
+    }
+
+    /* snippets area */
+    .section-label { font-size:13px; color:var(--muted); margin-bottom:6px; }
+    .chips-wrap { display:flex; flex-wrap:wrap; gap:8px; }
+
+    .chip {
+      padding:8px 11px;
+      border-radius:10px;
+      background:white;
+      border:1px solid #eef2ff;
+      cursor:pointer;
+      font-size:13px;
+      color:#374151;
+    }
+    .chip:hover { background:#f6f9ff; }
+
+    /* zip block placed under snippets */
+    .zip-block {
+      margin-top:10px;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid #eef2ff;
+      background:white;
+      box-shadow: 0 6px 20px rgba(15,23,42,0.02);
+    }
+    .zip-block input[type="file"], .zip-block input[type="text"], .zip-block select {
+      width:100%;
+      padding:8px 10px;
+      margin-top:8px;
+      border-radius:8px;
+      border:1px solid #e6eef9;
+      font-size:13px;
+    }
+
+    /* prism preview styling */
+    pre#preview {
+      margin-top:12px;
+      border-radius:8px;
+      padding:12px;
+      background: #0b1220;
+      color: #e6eef8;
+      max-height:160px; /* reduced */
+      overflow:auto;
+      font-family: var(--mono);
+      font-size:13px;
+      border:1px solid rgba(14,20,30,0.06);
+    }
+
+    /* right column */
+    .right-col { display:flex; flex-direction:column; gap:12px; }
+    .panel { background:white; border-radius:10px; padding:12px; border:1px solid #eef2ff; box-shadow: 0 6px 18px rgba(2,6,23,0.02); }
+    .panel h4 { margin:0 0 8px 0; font-size:13px; color:var(--muted); }
+    pre.output, pre.err {
+      margin:0; padding:12px; border-radius:8px; min-height:110px; /* reduced from 140 */
+      white-space:pre-wrap; font-family:var(--mono); background: #fbfdff;
+      border:1px solid #eef2ff; overflow:auto;
+    }
+    .err { color: var(--error); font-weight:700; }
+
+    .history { max-height:200px; overflow:auto; padding-right:6px; } /* reduced */
+    .hist-item { padding:8px 6px; border-bottom:1px solid #f6f8fb; cursor:pointer; font-size:13px; }
+    .hist-item small { color:var(--muted); display:block; margin-top:4px; font-size:12px; }
+
+    .status-row { display:flex; align-items:center; gap:10px; margin-top:4px; }
+    .status-light {
+      width:12px; height:12px; border-radius:50%; background:var(--idle); border:1px solid rgba(0,0,0,0.06);
+    }
+    .meta-small { font-size:12px; color:var(--muted); margin-left:auto; }
+
+    @media (max-width:700px) {
+      .controls { flex-direction:column; align-items:stretch; gap:10px; }
+      .controls .right { margin-left:0; justify-content:space-between; }
+      .meta-small { margin-left:0; }
+    }
+  </style>
+
+  <!-- Prism Syntax Highlighting (CDN) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <h1 class="title">Safe Code Executor</h1>
+        <div class="subtitle">Python & Node — sandboxed execution (Docker) • 10s timeout • 128MB • No network</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:13px;color:var(--muted)">Max 5000 chars</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <!-- LEFT -->
+      <div class="editor-col">
+        <div class="controls">
+          <div class="left">
+            <label style="font-size:13px;color:var(--muted)">Language</label>
+            <select id="language" class="lang" aria-label="Select language">
+              <option value="python">Python</option>
+              <option value="node">Node.js</option>
+            </select>
+          </div>
+
+          <div class="right">
+            <button id="runBtn" class="btn" title="Run (Ctrl/Cmd+Enter)">Run</button>
+            <button id="clearBtn" class="ghost" title="Clear editor">Clear</button>
+          </div>
+        </div>
+
+        <textarea id="code" class="code" spellcheck="false">print("Hello from Python")</textarea>
+
+        <!-- Prism highlighted preview -->
+        <pre id="preview"><code id="highlight" class="language-python"></code></pre>
+
+        <div class="status-row">
+          <div id="statusLight" class="status-light" style="background:var(--idle)"></div>
+          <div id="statusText" style="color:var(--muted)">Idle</div>
+          <div class="meta-small">Tip: use snippets below to test quickly</div>
+        </div>
+
+        <div>
+          <div class="section-label">Test snippets</div>
+          <div id="snippets" class="chips-wrap" aria-label="test snippets"></div>
+
+          <!-- ZIP block below snippets -->
+          <div class="zip-block" aria-label="zip upload block">
+            <div style="font-weight:600;color:var(--muted)">Run code from ZIP</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:6px">Upload a zip and provide the entry file name inside it (e.g., main.py)</div>
+            <input type="file" id="zipFile" accept=".zip" />
+            <input id="zipEntry" placeholder="Entry file inside zip (e.g., main.py)" />
+            <select id="zipLang" style="margin-top:6px;">
+              <option value="python">Python</option>
+              <option value="node">Node</option>
+            </select>
+            <button id="uploadZip" class="btn" style="margin-top:10px;width:100%">Run ZIP</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right-col">
+        <div class="panel">
+          <h4>Output</h4>
+          <pre id="output" class="output">–</pre>
+        </div>
+
+        <div class="panel">
+          <h4>Errors</h4>
+          <pre id="error" class="err">–</pre>
+        </div>
+
+        <div class="panel">
+          <h4>Recent runs</h4>
+          <div id="historyList" class="history">Loading…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SNIPPETS = [
+      { title: "Hello (Python)", lang: "python", code: `print("Hello")` },
+      { title: "Arithmetic (5+3)", lang: "python", code: `x = 5 + 3\nprint(x)` },
+      { title: "Loop 0..4", lang: "python", code: `for i in range(5):\n    print(i)` },
+      { title: "Infinite Loop (timeout)", lang: "python", code: `while True:\n    pass` },
+      { title: "Memory Bomb (Python)", lang: "python", code: `x = 'a' * 1000000000\nprint('done')` },
+      { title: "Network Test (Python)", lang: "python", code: `import urllib.request\nurllib.request.urlopen("http://example.com").read()` },
+      { title: "Read /etc/passwd", lang: "python", code: `with open("/etc/passwd") as f:\n    print(f.read())` },
+      { title: "Write /tmp (should fail)", lang: "python", code: `with open("/tmp/test.txt","w") as f:\n    f.write("hacked!")\nprint("done")` },
+      { title: "Large Alloc (Python)", lang: "python", code: `x = 'a' * 200000000\nprint('allocated large string of length', len(x))` },
+      { title: "Hello (Node)", lang: "node", code: `console.log("Hello from Node")` },
+      { title: "Node Loop", lang: "node", code: `for (let i = 0; i < 5; i++) {\n  console.log(i);\n}` },
+      { title: "Node Network (example)", lang: "node", code: `const https = require('https');\nhttps.get('https://example.com', res => {\n  console.log('status', res.statusCode);\n}).on('error', e => {\n  console.error('error', e.message);\n});` },
+      { title: "Fill >5000 chars (helper)", lang: "python", code: "__GEN_LONG__" }
+    ];
+
+    const snippetsContainer = document.getElementById("snippets");
+    SNIPPETS.forEach(s => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "chip";
+      btn.textContent = s.title;
+      btn.dataset.lang = s.lang;
+      btn.dataset.code = s.code;
+      snippetsContainer.appendChild(btn);
+    });
+
+    const codeEl = document.getElementById("code");
+    const runBtn = document.getElementById("runBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const languageEl = document.getElementById("language");
+    const outputEl = document.getElementById("output");
+    const errorEl = document.getElementById("error");
+    const historyList = document.getElementById("historyList");
+    const statusLight = document.getElementById("statusLight");
+    const statusText = document.getElementById("statusText");
+
+    snippetsContainer.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("button");
+      if (!btn) return;
+      const code = btn.dataset.code;
+      const lang = btn.dataset.lang || "python";
+      languageEl.value = lang;
+
+      if (code === "__GEN_LONG__") {
+        const line = "a".repeat(120);
+        let big = "# long filler to exceed 5000 chars\n";
+        for (let i = 0; i < 45; i++) {
+          big += line + "\n";
+        }
+        codeEl.value = big;
+      } else {
+        codeEl.value = code;
+      }
+      codeEl.focus();
+      updateHighlight();
+    });
+
+    async function loadHistory() {
+      try {
+        const res = await fetch("/history");
+        const j = await res.json();
+        const h = j.history || [];
+        historyList.innerHTML = "";
+        if (!h.length) {
+          historyList.innerHTML = '<div style="color:var(--muted)">No runs yet</div>';
+          return;
+        }
+        h.slice(0,30).forEach(item => {
+          const el = document.createElement("div");
+          el.className = "hist-item";
+          el.innerHTML = `<strong>${item.language.toUpperCase()}</strong> <small>${item.timestamp}</small>
+                          <div style="color:#475569;margin-top:6px;font-size:13px">${(item.code||'').slice(0,140).replace(/\n/g,' ')}...</div>`;
+          el.onclick = () => {
+            codeEl.value = item.code;
+            languageEl.value = item.language;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateHighlight();
+          };
+          historyList.appendChild(el);
+        });
+      } catch (e) {
+        historyList.innerHTML = '<div style="color:var(--error)">Failed to load history</div>';
+      }
+    }
+
+    loadHistory();
+
+    function setStatus(state, text) {
+      if (state === "idle") {
+        statusLight.style.background = "var(--idle)";
+      } else if (state === "running") {
+        statusLight.style.background = "var(--running)";
+      } else if (state === "ok") {
+        statusLight.style.background = "var(--ok)";
+      } else {
+        statusLight.style.background = "var(--error)";
+      }
+      statusText.textContent = text || state;
+    }
+
+    runBtn.addEventListener("click", async () => {
+      const code = codeEl.value || "";
+      const lang = (languageEl.value || "python").toLowerCase();
+
+      if (!code.trim()) {
+        errorEl.textContent = "Code is empty.";
+        return;
+      }
+
+      if (code.length > 5000) {
+        errorEl.textContent = "Code too long (>5000 chars).";
+        outputEl.textContent = "–";
+        setStatus("error", "Validation error");
+        return;
+      }
+
+      outputEl.textContent = "Running…";
+      errorEl.textContent = "–";
+      setStatus("running", "Running…");
+
+      try {
+        const res = await fetch("/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code, language: lang })
+        });
+        const data = await res.json();
+
+        outputEl.textContent = data.output || "–";
+        errorEl.textContent = data.error || "–";
+
+        if (data.error && data.error.trim()) {
+          setStatus("error", "Error");
+        } else {
+          setStatus("ok", "Success");
+        }
+
+        await loadHistory();
+      } catch (e) {
+        outputEl.textContent = "–";
+        errorEl.textContent = "Request failed. Is the server running?";
+        setStatus("error", "Network error");
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      codeEl.value = "";
+      outputEl.textContent = "–";
+      errorEl.textContent = "–";
+      setStatus("idle", "Idle");
+      updateHighlight();
+    });
+
+    document.getElementById("uploadZip").addEventListener("click", async () => {
+      const fileEl = document.getElementById("zipFile");
+      const entry = document.getElementById("zipEntry").value;
+      const lang = document.getElementById("zipLang").value || "python";
+
+      if (!fileEl.files.length) {
+        alert("Select a zip file.");
+        return;
+      }
+      if (!entry || !entry.trim()) {
+        alert("Enter entry filename inside zip (e.g., main.py).");
+        return;
+      }
+
+      const form = new FormData();
+      form.append("file", fileEl.files[0]);
+      form.append("entry", entry);
+      form.append("language", lang);
+
+      outputEl.textContent = "Running ZIP…";
+      errorEl.textContent = "–";
+      setStatus("running", "Running ZIP…");
+
+      try {
+        const res = await fetch("/run-zip", { method: "POST", body: form });
+        const data = await res.json();
+        outputEl.textContent = data.output || "–";
+        errorEl.textContent = data.error || "–";
+        if (data.error && data.error.trim()) {
+          setStatus("error", "Error");
+        } else {
+          setStatus("ok", "Success");
+        }
+        await loadHistory();
+      } catch (e) {
+        outputEl.textContent = "–";
+        errorEl.textContent = "ZIP upload failed.";
+        setStatus("error", "Network error");
+      }
+    });
+
+    codeEl.addEventListener("keydown", (ev) => {
+      if ((ev.ctrlKey || ev.metaKey) && ev.key === "Enter") {
+        runBtn.click();
+      }
+    });
+
+    const highlightEl = document.getElementById("highlight");
+    function updateHighlight(){
+      const lang = (languageEl.value || "python").toLowerCase();
+      if (lang === "node") {
+        highlightEl.className = "language-javascript";
+      } else {
+        highlightEl.className = "language-python";
+      }
+      highlightEl.textContent = codeEl.value;
+      Prism.highlightElement(highlightEl);
+    }
+
+    codeEl.addEventListener("input", updateHighlight);
+    languageEl.addEventListener("change", updateHighlight);
+
+    updateHighlight();
+  </script>
+</body>
+</html>

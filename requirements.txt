@@ -1,0 +1,11 @@
+Flask==3.0.2
+Werkzeug==3.0.1
+python-dotenv==1.0.1
+
+# ZIP handling
+zipfile36==0.1.3
+
+# For parallel execution (ThreadPoolExecutor is built-in, so no package needed)
+
+# Optional: to avoid Unicode output issues (safe)
+chardet==5.2.0
