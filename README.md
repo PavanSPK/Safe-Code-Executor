@@ -7,7 +7,7 @@ The project demonstrates how to safely run untrusted code using Docker-based san
 
 -----------------------------------------------------------------------------------------------------
 ## 1. Project Architecture
-
+![safe-code-executor_architecture](https://github.com/PavanSPK/Safe-Code-Executor/blob/45f2f3c7136aae6a3df9bf77582e1acf5234588c/screenshots/safe-code-executor_architecture.png)
 -----------------------------------------------------------------------------------------------------
 ## 2. Project Structure
 ```
