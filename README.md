@@ -104,11 +104,11 @@ docker pull spk487/safe-code-executor
 ```
 ### 6. Run from Docker Hub (no local build needed)
 ```
-docker run -p 5000:5000 <your-dockerhub-username>/safe-code-executor:latest
+docker run -p 5000:5000 spk487/safe-code-executor:latest
 ```
 Example:
 ```
-docker run -p 5000:5000 spkpavan/safe-code-executor:latest
+docker run -p 5000:5000 spk487/safe-code-executor:latest
 ```
 This instantly launches the Safe Code Executor server using your pushed image.
 
