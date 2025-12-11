@@ -2,7 +2,9 @@
 
 Safe Code Executor is a fully functional miniature online code-runner system.  
 It allows users to submit Python and Node.js code via an API or Web UI, which is executed securely inside Docker containers with strong isolation.
+
 The project demonstrates how to safely run untrusted code using Docker-based sandboxing with resource limits and network isolation.
+
 -----------------------------------------------------------------------------------------------------
 ## 1. Project Architecture
 ![safe-code-executor_architecture](https://github.com/PavanSPK/Safe-Code-Executor/blob/45f2f3c7136aae6a3df9bf77582e1acf5234588c/screenshots/safe-code-executor_architecture.png)
@@ -109,6 +111,7 @@ Example:
 docker run -p 5000:5000 spkpavan/safe-code-executor:latest
 ```
 This instantly launches the Safe Code Executor server using your pushed image.
+
 -----------------------------------------------------------------------------------------------------
 ## 5. API Documentation
 ### /run (POST)
@@ -131,6 +134,7 @@ Multipart form:
 -----------------------------------------------------------------------------------------------------
 ### /run-batch (POST)
 Executes up to 5 tasks in parallel.
+
 -----------------------------------------------------------------------------------------------------
 ## 6. Web UI Overview
 UI includes:
@@ -161,6 +165,7 @@ Writing to `/tmp` or root fails with:
 **Read-only file system**
 ### 7.5 Code length validation
 Rejects scripts >5000 characters.
+
 -----------------------------------------------------------------------------------------------------
 ## 8. Docker Security Experiments
 Now we use the system you built to learn about Docker’s isolation.
@@ -344,6 +349,7 @@ Creating test_security.py taught me how to systematically test:
 This reinforced the importance of regression testing in security-focused projects.
 ### 8. Documentation & architecture thinking
 Preparing the README, diagrams, and test instructions helped strengthen skills in communicating design decisions and explaining system behavior clearly.
+
 -----------------------------------------------------------------------------------------------------
 ## Author
 **Sandu Pavan Kumar**  
