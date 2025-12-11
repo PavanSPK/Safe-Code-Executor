@@ -145,6 +145,7 @@ UI includes:
 - Execution history
 - ZIP upload panel
 - Snippet buttons
+
 ![ui](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/ui.png)
 -----------------------------------------------------------------------------------------------------
 
@@ -243,31 +244,48 @@ Lesson:
 ## 10. Required Demonstration Tests
 ### Phase 1 — Normal code
 - Hello (python)
- ![hello](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/hello.png)
+
+![hello](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/hello.png)
+
 - Arithmetic
+
  ![arithmetic](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/arithmetic.png)
+
 - loops
+
 ![loop](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/loop.png)
 ![node_loop](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/node_loop.png)
 
 ### Phase 2 — Security tests
 - Infinite loop → timeout 
+
 ![infinite_loop](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/infinite_loop.png)
+
 - Memory bomb → OOM  
+
 ![memory_bomb](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/memory_bomb.png)
+
 - Network request → blocked
+
  ![nw_test](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/nw_test.png)
  ![nw_test2](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/nw_test2.png)
  ![node_nw](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/node_nw.png)
+
 - Write file → blocked (read-only)  
+
  ![write](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/write.png)
+
 - Long code (>5000 chars) → rejected  
+
  ![5000_chars](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/5000_chars.png)
 
 ### Phase 3 — Docker experiments
 - Read /etc/passwd  
+
  ![read](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/read.png)
+
 - Write before/after read-only flag  
+
  ![alloc](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/alloc.png)
 
 -------------------------------------------------------------------------------------------------------------------------------------------
@@ -278,7 +296,9 @@ Lesson:
 - Support JavaScript (Node.js)
 - Added a language field to /run (defaults to python).
 - If language == "node" use node:20-slim and run node user_code.js with the same Docker safety flags.
+
  ![node_hello](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/node_hello.png)
+
 ### - UI improvements: add language selector, prettier tweaks, history panel
 - Added a language select (Python / NodeJS).
 - Added a History sidebar (list recent runs returned from /history).
@@ -290,7 +310,9 @@ Below is a drop-in replacement of your index.html that:
 - Adds a "Run as Node" option
 - Adds basic Prism highlighting for the preview (client side)
 - Execution history
+
 ![ui](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/ui.png)
+
 ### - Add history of recent executions
 - Included in backend app.py and UI /history usage. History stores timestamp, language, truncated code, output, error, exit_code.
 
@@ -298,10 +320,14 @@ Below is a drop-in replacement of your index.html that:
 ### - Support multiple files (user uploads a zip)
 What this does
 - Adds a new endpoint POST /run-zip that accepts multipart/form-data with a zip file, extracts it to a temp folder, and runs a specified entrypoint (e.g., main.py or index.js) inside Docker with same safety flags.
+
 ![zip](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/zip.png)
+
 ### - Syntax highlighting (optional)
 - highlights a read-only preview using Prism. This avoids replacing <textarea> (which is heavy to replace with a code editor) while still showing highlighted code.
+
 ![ui](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/ui.png)
+
 ### - Parallel execution (5 containers)
 - Implemented in executor.py as run_multiple using ThreadPoolExecutor(max_workers=5) and exposed via /run-batch endpoint. UI can send a list of tasks:
 Example curl:
