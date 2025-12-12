@@ -262,25 +262,25 @@ Lesson:
 ![node_loop](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/node_loop.png)
 
 ### Phase 2 — Security tests
-- Infinite loop → timeout 
+- Infinite loop: timeout 
 
 ![infinite_loop](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/infinite_loop.png)
 
-- Memory bomb → OOM  
+- Memory bomb: Out Of Memory  
 
 ![memory_bomb](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/memory_bomb.png)
 
-- Network request → blocked
+- Network request: blocked
 
  ![nw_test](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/nw_test.png)
  ![nw_test2](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/nw_test2.png)
  ![node_nw](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/node_nw.png)
 
-- Write file → blocked (read-only)  
+- Write file: blocked (read-only)  
 
  ![write](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/write.png)
 
-- Long code (>5000 chars) → rejected  
+- Long code (>5000 chars): rejected  
 
  ![5000_chars](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/5000_chars.png)
 
