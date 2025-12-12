@@ -321,7 +321,7 @@ Below is a drop-in replacement of your index.html that:
 ### - Add history of recent executions
 - Included in backend app.py and UI /history usage. History stores timestamp, language, truncated code, output, error, exit_code.
 
-![history](![ui](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/ui.png))
+![history](https://github.com/PavanSPK/Safe-Code-Executor/blob/c37c97d46b436781f54e1794f43e87e0bca5c744/screenshots/history.png)
 
 ### Medium Level
 ### - Support multiple files (user uploads a zip)
