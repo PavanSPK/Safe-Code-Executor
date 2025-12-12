@@ -174,7 +174,7 @@ Rejects scripts >5000 characters.
 
 -----------------------------------------------------------------------------------------------------
 ## 8. Docker Security Experiments
-Now we use the system you built to learn about Docker’s isolation.
+Now let's use the system which built to learn about Docker’s isolation.
 ### 8.1. Try to read /etc/passwd
 ```
 with open("/etc/passwd") as f:
@@ -231,7 +231,7 @@ Lesson:
 ### What worked?
 - Code executed safely.
 - Timeout triggered correctly.
-- OOM kill worked.
+- OOM(Out of memory) kill worked.
 - Network completely blocked.
 - Read-only filesystem prevented writes.
 - ZIP and batch runs succeeded.
