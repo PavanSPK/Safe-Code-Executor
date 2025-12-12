@@ -61,10 +61,13 @@ docker pull node:20-slim
 ```
 python app.py
 ```
+![run](https://github.com/PavanSPK/Safe-Code-Executor/blob/325de5e83e741d8aec454a37cad4d9483ed75134/screenshots/run.png)
+
 ### Step 6 — Open UI
 ```
 http://localhost:5000
 ```
+![ui](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/ui.png)
 -----------------------------------------------------------------------------------------------------
 ## Docker Build, Push & Pull Instructions
 This section explains how to containerize the Safe Code Executor backend, push it to a container registry, and pull it on another system.
@@ -97,6 +100,8 @@ Example push:
 ```
 docker push spk487/safe-code-executor:latest
 ```
+![dockerhub](https://github.com/PavanSPK/Safe-Code-Executor/blob/325de5e83e741d8aec454a37cad4d9483ed75134/screenshots/dockerhub.png)
+
 ### 5. Pull the image anywhere
 Public Docker link:
 ```
