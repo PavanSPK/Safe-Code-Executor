@@ -346,7 +346,7 @@ curl -X POST http://localhost:5000/run-batch \
 ![parallel2](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/parallel2.png)
 ![parallel1](https://github.com/PavanSPK/Safe-Code-Executor/blob/33cec7d5e34d589b9126d4bb806aafbfdc3917ee/screenshots/parallel1.png)
 -----------------------------------------------------------------------------------------------------
-## 12. Final Learning Reflection (Short Brief)
+## 12. Final Learning Reflection
 This project provided hands-on experience building a secure sandbox for executing untrusted code. The key learnings are:
 ### 1. Why untrusted code is dangerous
 Running external code can cause infinite loops, memory exhaustion, unauthorized file access, or network abuse. This highlighted the need for strict isolation and resource controls.
